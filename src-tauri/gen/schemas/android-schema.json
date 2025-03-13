@@ -319,6 +319,11 @@
           "const": "core:app:allow-default-window-icon"
         },
         {
+          "description": "Enables the identifier command without any pre-configured scope.",
+          "type": "string",
+          "const": "core:app:allow-identifier"
+        },
+        {
           "description": "Enables the name command without any pre-configured scope.",
           "type": "string",
           "const": "core:app:allow-name"
@@ -352,6 +357,11 @@
           "description": "Denies the default_window_icon command without any pre-configured scope.",
           "type": "string",
           "const": "core:app:deny-default-window-icon"
+        },
+        {
+          "description": "Denies the identifier command without any pre-configured scope.",
+          "type": "string",
+          "const": "core:app:deny-identifier"
         },
         {
           "description": "Denies the name command without any pre-configured scope.",

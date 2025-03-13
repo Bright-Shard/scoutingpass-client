@@ -2,8 +2,8 @@ use {
 	bytes::Bytes,
 	scraper::{Html, Selector},
 	std::{
-		fs::{self, OpenOptions, Permissions},
-		io::Write,
+		fs::{self, File, OpenOptions, Permissions},
+		io::{Read, Write},
 		os::unix::fs::PermissionsExt,
 		path::PathBuf,
 	},
@@ -27,10 +27,13 @@ pub fn run() {
 			launch,
 			download,
 			clean_cache,
-			get_tba_data
+			get_tba_data,
+			save_qr,
+			get_qr_code_events,
+			get_qr_codes
 		])
 		.setup(|app| {
-			let webview = app.get_webview("main").unwrap();
+			let webview = app.get_webview_window("main").unwrap();
 			webview
 				.with_webview(|webview| {
 					#[cfg(target_os = "android")]
@@ -239,6 +242,53 @@ async fn get_tba_data(
 
 		Ok(data)
 	}
+}
+
+#[tauri::command]
+async fn save_qr(app: AppHandle, event: String, data_url: String) {
+	let cache_folder = cache_folder_path(&app).join("qrcodes");
+	if !cache_folder.exists() {
+		fs::create_dir_all(&cache_folder).unwrap();
+	}
+
+	let qr_cache_file = cache_folder.join(event);
+	let mut file = File::options()
+		.create(true)
+		.append(true)
+		.open(&qr_cache_file)
+		.unwrap();
+
+	file.write_all(format!("{data_url}\n").as_bytes()).unwrap();
+}
+#[tauri::command]
+async fn get_qr_code_events(app: AppHandle) -> Vec<String> {
+	let cache_folder = cache_folder_path(&app).join("qrcodes");
+	if !cache_folder.exists() {
+		fs::create_dir_all(&cache_folder).unwrap();
+	}
+
+	cache_folder
+		.read_dir()
+		.unwrap()
+		.into_iter()
+		.map(|entry| entry.unwrap().file_name().into_string().unwrap())
+		.collect()
+}
+#[tauri::command]
+async fn get_qr_codes(app: AppHandle, event: String) -> Vec<String> {
+	let cache = cache_folder_path(&app).join("qrcodes").join(event);
+	let mut file_contents = String::new();
+	File::options()
+		.read(true)
+		.open(cache)
+		.unwrap()
+		.read_to_string(&mut file_contents)
+		.unwrap();
+	file_contents
+		.lines()
+		.into_iter()
+		.map(String::from)
+		.collect()
 }
 
 fn cache_folder_path(app: &AppHandle) -> PathBuf {

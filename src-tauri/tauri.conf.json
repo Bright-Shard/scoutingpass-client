@@ -1,38 +1,33 @@
 {
-  "app": {
-    "withGlobalTauri": true,
-    "windows": [
-      {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "scout",
-        "width": 800
-      }
-    ],
-    "security": {
-      "csp": null
-    }
-  },
-  "build": {
-    "frontendDist": "../ui"
-  },
-  "productName": "scout",
-  "version": "0.1.0",
-  "identifier": "org.team900.scout",
-  "bundle": {
-    "active": true,
-    "category": "",
-    "copyright": "none",
-    "android": {
-      "minSdkVersion": 24
-    },
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
-  }
+	"$schema": "https://schema.tauri.app/config/2",
+	"productName": "scout",
+	"version": "0.1.0",
+	"identifier": "org.team900.scout",
+	"build": {
+		"frontendDist": "../ui"
+	},
+	"app": {
+		"withGlobalTauri": true,
+		"windows": [
+			{
+				"title": "tauri-app",
+				"width": 800,
+				"height": 600
+			}
+		],
+		"security": {
+			"csp": ""
+		}
+	},
+	"bundle": {
+		"active": true,
+		"targets": "all",
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		]
+	}
 }
